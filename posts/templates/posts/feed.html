@@ -23,7 +23,12 @@
 
         <p>
             Likes: {{ post.likes.count }}
-            <a href="{% url 'like_post' post.id %}">Like</a>
+            {% if user in post.likes.all %}
+                <a href="{% url 'unlike_post' post.id %}">Unlike</a>
+            {% else %}
+                <a href="{% url 'like_post' post.id %}">Like</a>
+            {% endif %}
+
         </p>
 
         <a href="{% url 'post_detail' post.id %}">View Post</a>

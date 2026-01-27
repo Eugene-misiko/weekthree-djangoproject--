@@ -48,3 +48,12 @@ def unlike_post_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     post.likes.remove(request.user)
     return redirect('feed')
+
+@login_required
+def delete_comment_view(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if comment.author == request.user:
+        comment.delete()
+
+    return redirect('post_detail', post_id=comment.post.id)
