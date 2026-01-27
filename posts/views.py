@@ -17,3 +17,14 @@ def create_post_view(request):
         )
         return redirect('feed')
     return render(request, 'posts/create_post.html')
+
+@login_required
+def post_detail_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, 'posts/post_detail.html', {'post': post})
+
+@login_required
+def like_post_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.likes.add(request.user)
+    return redirect('feed')
