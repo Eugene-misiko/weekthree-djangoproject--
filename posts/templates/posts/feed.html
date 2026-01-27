@@ -1,12 +1,28 @@
 <h1>News Feed</h1>
 <a href="{% url 'user_search' %}">Search Users</a>
-
 <a href="{% url 'create_post' %}">Create Post</a>
 <a href="{% url 'logout' %}">Logout</a>
 
 <hr>
 
 {% for post in posts %}
+
+<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+    <p>
+        <strong>
+            <a href="{% url 'profile' post.author.id %}">
+                {% if post.author.profile.profile_picture %}
+                    <img src="{{ post.author.profile.profile_picture.url }}"
+                         width="50" height="50" style="border-radius:50%; vertical-align:middle;">
+                {% else %}
+                    <img src="https://via.placeholder.com/50"
+                         width="50" height="50" style="border-radius:50%; vertical-align:middle;">
+                {% endif %}
+                {{ post.author.username }}
+            </a>
+        </strong>
+    </p>
+
     <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
         <p>
             <strong>
@@ -29,11 +45,19 @@
             {% else %}
                 <a href="{% url 'like_post' post.id %}">Like</a>
             {% endif %}
-
         </p>
+
+        <!-- EDIT / DELETE buttons only for post author -->
+        {% if post.author == user %}
+            <p>
+                <a href="{% url 'edit_post' post.id %}">Edit</a> |
+                <a href="{% url 'delete_post' post.id %}" style="color:red;">Delete</a>
+            </p>
+        {% endif %}
 
         <a href="{% url 'post_detail' post.id %}">View Post</a>
     </div>
 {% empty %}
     <p>No posts yet.</p>
 {% endfor %}
+
