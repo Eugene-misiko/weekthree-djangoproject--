@@ -75,3 +75,12 @@ def edit_post_view(request, post_id):
 
     return render(request, 'posts/edit_post.html', {'post': post})
 
+@login_required
+def delete_post_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if post.author == request.user:
+        post.delete()
+
+    return redirect('feed')
+
