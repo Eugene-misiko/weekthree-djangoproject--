@@ -32,4 +32,7 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-      
+@login_required
+def profile_view(request, user_id):
+    profile = get_object_or_404(Profile, user__id=user_id)
+    return render(request, 'myapp/profile.html', {'profile': profile})      
