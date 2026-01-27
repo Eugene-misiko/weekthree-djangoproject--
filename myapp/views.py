@@ -35,4 +35,16 @@ def logout_view(request):
 @login_required
 def profile_view(request, user_id):
     profile = get_object_or_404(Profile, user__id=user_id)
-    return render(request, 'myapp/profile.html', {'profile': profile})      
+    return render(request, 'myapp/profile.html', {'profile': profile})  
+
+@login_required
+def follow_user(request, user_id):
+    target_profile = get_object_or_404(Profile, user__id=user_id)
+    target_profile.followers.add(request.user)
+    return redirect('profile', user_id=user_id)
+
+@login_required
+def unfollow_user(request, user_id):
+    target_profile = get_object_or_404(Profile, user__id=user_id)
+    target_profile.followers.remove(request.user)
+    return redirect('profile', user_id=user_id)    
