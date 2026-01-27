@@ -11,9 +11,17 @@ def register_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+
+        if User.objects.filter(username=username).exists():
+            return render(request, 'myapp/register.html', {
+                'error': 'Username already exists'
+            })
+
         user = User.objects.create_user(username=username, password=password)
         Profile.objects.create(user=user)
         login(request, user)
+        return redirect('feed')
+
     return render(request, 'myapp/register.html')
 
 def login_view(request):

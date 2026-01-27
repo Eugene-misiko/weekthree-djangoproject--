@@ -42,3 +42,9 @@ def add_comment_view(request, post_id):
             content=request.POST['content']
         )
         return redirect('post_detail', post_id=post_id)
+    
+@login_required
+def unlike_post_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.likes.remove(request.user)
+    return redirect('feed')
