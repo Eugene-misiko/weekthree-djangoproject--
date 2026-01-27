@@ -13,4 +13,16 @@ def register_view(request):
         user = User.objects.create_user(username=username, password=password)
         Profile.objects.create(user=user)
         login(request, user)
-    return render(request, 'myapp/register.html')    
+    return render(request, 'myapp/register.html')
+
+def login_view(request):
+    if request.method == 'POST':
+        user = authenticate(
+            request,
+            username=request.POST['username'],
+            password =request.POST['password']
+        )
+        if user:
+            login(request, user)
+            return redirect('feed')
+    return render(request, 'myapp/login.html')        
