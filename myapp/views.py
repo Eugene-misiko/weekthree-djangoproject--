@@ -59,4 +59,18 @@ def follow_user(request, user_id):
 def unfollow_user(request, user_id):
     target_profile = get_object_or_404(Profile, user__id=user_id)
     target_profile.followers.remove(request.user)
-    return redirect('profile', user_id=user_id)    
+    return redirect('profile', user_id=user_id) 
+
+@login_required
+def user_search_view(request):
+    query = request.GET.get('q')
+    users = []
+
+    if query:
+        users = User.objects.filter(username__icontains=query)
+
+    return render(request, 'myapp/user_search.html', {
+        'users': users,
+        'query': query
+    })
+
