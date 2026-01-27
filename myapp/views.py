@@ -74,3 +74,17 @@ def user_search_view(request):
         'query': query
     })
 
+@login_required
+def profile_view(request, user_id):
+    profile = get_object_or_404(Profile, user__id=user_id)
+
+    # Only allow editing own profile
+    if request.method == 'POST' and request.user == profile.user:
+        profile.bio = request.POST.get('bio', profile.bio)
+        if request.FILES.get('profile_picture'):
+            profile.profile_picture = request.FILES['profile_picture']
+        profile.save()
+        return redirect('profile', user_id=user_id)
+
+    return render(request, 'myapp/profile.html', {'profile': profile})
+
