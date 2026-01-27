@@ -1,3 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect, get_object_or_404
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from .models import Profile
+
 
 # Create your views here.
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = User.objects.create_user(username=username, password=password)
+        Profile.objects.create(user=user)
+        login(request, user)
+    return render(request, 'myapp/register.html')    
