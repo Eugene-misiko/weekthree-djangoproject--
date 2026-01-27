@@ -25,4 +25,11 @@ def login_view(request):
         if user:
             login(request, user)
             return redirect('feed')
-    return render(request, 'myapp/login.html')        
+    return render(request, 'myapp/login.html')  
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+      
