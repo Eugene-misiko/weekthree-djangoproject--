@@ -1,0 +1,16 @@
+<h1>Create Post</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <textarea name="content" placeholder="What's on your mind?" required></textarea>
+    <br><br>
+
+    <input type="file" name="image">
+    <br><br>
+
+    <button type="submit">Post</button>
+</form>
+
+<br>
+<a href="{% url 'feed' %}">Back to Feed</a>
