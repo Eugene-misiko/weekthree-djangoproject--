@@ -57,3 +57,21 @@ def delete_comment_view(request, comment_id):
         comment.delete()
 
     return redirect('post_detail', post_id=comment.post.id)
+
+@login_required
+def edit_post_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    # security check
+    if post.author != request.user:
+        return redirect('feed')
+
+    if request.method == 'POST':
+        post.content = request.POST['content']
+        if request.FILES.get('image'):
+            post.image = request.FILES.get('image')
+        post.save()
+        return redirect('post_detail', post_id=post.id)
+
+    return render(request, 'posts/edit_post.html', {'post': post})
+
