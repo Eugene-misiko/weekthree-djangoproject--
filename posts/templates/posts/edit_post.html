@@ -1,20 +1,41 @@
-<h1>Edit Post</h1>
+<script src="https://cdn.tailwindcss.com"></script>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+<div class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Edit Post</h1>
+        
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Content</label>
+                <textarea name="content" required rows="6" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2">{{ post.content }}</textarea>
+            </div>
 
-    <textarea name="content" required>{{ post.content }}</textarea>
-    <br><br>
+            {% if post.image %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Current Image</label>
+                    <img src="{{ post.image.url }}" class="mt-2 max-w-sm rounded-md shadow-sm">
+                </div>
+            {% endif %}
 
-    {% if post.image %}
-        <img src="{{ post.image.url }}" width="300"><br>
-    {% endif %}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Update Image</label>
+                <input type="file" name="image" 
+                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
 
-    <input type="file" name="image">
-    <br><br>
+            <div class="flex items-center justify-between pt-4">
+                <a href="{% url 'post_detail' post.id %}" 
+                    class="text-sm text-gray-600 hover:text-gray-900">Cancel</a>
+                
+                <button type="submit" 
+                    class="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Update Post
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-    <button type="submit">Update Post</button>
-</form>
-
-<br>
-<a href="{% url 'post_detail' post.id %}">Cancel</a>

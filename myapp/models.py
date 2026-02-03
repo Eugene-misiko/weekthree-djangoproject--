@@ -8,8 +8,6 @@ class Profile(models.Model):
     followers = models.ManyToManyField(
         User, related_name='following', blank=True
     )
-
     
-
     def __str__(self):
         return self.user.username
