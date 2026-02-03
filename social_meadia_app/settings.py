@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from decouple import config
 import cloudinary
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -43,12 +45,15 @@ INSTALLED_APPS = [
     'posts',
     'rest_framework',
     'cloudinary',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -84,18 +89,36 @@ WSGI_APPLICATION = 'social_meadia_app.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# DATABASES = {
+#     'default': {
+#         'ENGINE' : 'django.db.backends.postgresql',
+#         'NAME' : config('DATABASE_NAME'),
+#         'USER' : config('DATABASE_USER'),
+#         'PASSWORD' : config('DATABASE_PASSWORD'),
+#         'HOST' : config('DATABASE_HOST'),
+#         'PORT' : config('PORT')
+#     }
+# }
+
+# connected to the render.com (deployment site)
 DATABASES = {
-    'default': {
-        'ENGINE' : 'django.db.backends.postgresql',
-        'NAME' : config('DATABASE_NAME'),
-        'USER' : config('DATABASE_USER'),
-        'PASSWORD' : config('DATABASE_PASSWORD'),
-        'HOST' : config('DATABASE_HOST'),
-        'PORT' : config('PORT')
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3', #fallback for local development
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
+CORS_ALLOW_ALL_ORIGINS = True
 
+#for specific origin
+CORS_ALLOWED_ORIGINS = [
+ 'http://localhost:5173', 
+ 'https://your-reat-app.vercel.app',
+
+ #Render deployed app(front end/back end)
+ 'https://djang-notes-'
+]
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -114,6 +137,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+ALLOWED_HOSTS = ['https://capstone-python-pygame.onrender.com', '127.0.0.1']
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+    'x-requested-with',
+]
+FIELD_ENCRYPTION_KEY = '6lKV8Ck-wuQbKRx5qq6qzqDHQH1-Ha3SI4ZA3hYBG7k='
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
@@ -138,3 +170,10 @@ LOGOUT_REDIRECT_URL = '/myapp/login/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+#STATIC_ROOT = 'static/'
+STATIC_FILES_DIR = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_FILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
