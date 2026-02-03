@@ -147,6 +147,7 @@ CORS_ALLOW_HEADERS = [
 ]
 FIELD_ENCRYPTION_KEY = '6lKV8Ck-wuQbKRx5qq6qzqDHQH1-Ha3SI4ZA3hYBG7k='
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
